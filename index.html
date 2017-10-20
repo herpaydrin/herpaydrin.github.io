@@ -1,134 +1,43 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>短信服务条款</title>
-    <meta name="viewport" content="width=device-width">
-<style type="text/css">
- p{
-    text-indent: 2em;
-}
-@charset "utf-8";
-html {
-    color: #333;
-    background: #fff;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    text-rendering: optimizelegibility;
-}
-*{
-    margin: 0;
-    padding: 0;
-}
-body{
-    font: 300 1em/1.8 PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans;
-}
-
-button::-moz-focus-inner,
-input::-moz-focus-inner {
-    padding: 0;
-    border: 0;
-}
-
-ul{
-    list-style: none;
-}
-small, .typo-small,
-.serif {
-    font-family: Palatino, Optima, Georgia, serif;
-}
-.typo p, .typo ul {
-    margin-bottom: 0.5em;
-}
-
-h2, h5{
-    font-family: PingFang SC, Verdana, Helvetica Neue, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
-    font-weight: 100;
-    color: #000;
-    line-height: 1.35;
-}
- .typo h2,.typo h5
-{
-    margin-top: 1.2em;
-    margin-bottom: 0.6em;
-    line-height: 1.35;
-}
-
-.typo h2{
-    font-size: 1.8em;
-}
-
-
-.typo h5{
-    font-size: 1.2em;
-}
-
-.typo li ul, .typo li ol {
-    margin-bottom: 0.8em;
-    margin-left: 0.5em;
-}
-
-@media screen and (min-width: 320px) and (max-width: 480px){
-    div.container{
-        width: 90%;
-        margin:0 auto 3em;
-    }
-    h2{
-        font-size: 1.5em !important;
-    }
-    h5{
-        font-size: 1em !important;
-        font-weight:500 !important;;
-    }
-}
-
-
-@media only screen and (min-width: 321px) and (max-width: 1024px){
-    div.container{
-        width: 90%;
-        margin:0 auto 3em;
-    }
-}
-
-@media only screen and (min-width: 1029px){
-    div.container{
-        width: 960px;
-        margin:0 auto 3em;
-    }
-}   
-</style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=TX5YpAKUqe5FYF2XCQ0tR4FRO9kSKlwo"></script>
+ 
+    <title>百度地图的定位</title>
 </head>
-<body class="typo">
-<div class="container">
-    <div style="text-align: center"><h2>短信服务条款</h2></div>
-                    <ul class="typo-ul">
-                        <li>1. 群发之前，请务必先给自己发一条测试短信，若未收到，请先联系客服，
-                        客服微信号kingnew007。</li>
-                        <li>2. 发现没收到的情况，请立即联系客服，发送超过48小时则无法查询和退费。</li>
-                        <li>3. 客户收到的短信，发送号码为106开头。</li>
-                        <li>4. 用户不得发送含有以下内容的信息：</li>
-                        <li>(1). 违反中华人民共和国宪法所确定的基本原则的。</li>
-                        <li>(2). 危害国家安全，泄露国家秘密，颠覆国家政权，破坏国家统一的。</li>
-                        <li>(3). 损害国家荣誉和利益的。</li>
-                        <li>(4). 煽动民族仇恨、民族歧视，破坏民族团结的。</li>
-                        <li>(5). 破坏国家宗教政策，宣扬邪教和封建迷信的。</li>
-                        <li>(6). 造谣中伤，扰乱社会秩序，破坏社会稳定的。</li>
-                        <li>(7). 反动、色情、淫秽、赌博、暴力、凶杀、恐怖、恐吓或者教唆犯罪的。</li>
-                        <li>(8). 侮辱、谩骂、诽谤他人的。</li>
-                        <li>(9). 中华人民共和国法律、行政法规所禁止的其它内容的。</li>
-                        <li>店管家将保留追究发送违法违规短信者责任的权利，视情节将给予封禁短信功能或账号的处罚。</li>
-                        <li>5. 客服电话：<a href="tel:4008603390">400-860-3390</a></li>
-                    </ul>
-</div>
+<body>
+    <div id="allmap" style="width: 100%;height: 500px;"></div>
+ 
+ 
+    <script type="text/javascript">
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point(108.95,34.27);
+    map.centerAndZoom(point,12);
+ 
+    var geolocation = new BMap.Geolocation();
+    geolocation.getCurrentPosition(function(r){console.log(r.point)
+        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+            var mk = new BMap.Marker(r.point);
+            map.addOverlay(mk);//标出所在地
+            map.panTo(r.point);//地图中心移动
+            //alert('您的位置：'+r.point.lng+','+r.point.lat);
+            var point = new BMap.Point(r.point.lng,r.point.lat);//用所定位的经纬度查找所在地省市街道等信息
+            var gc = new BMap.Geocoder();
+            gc.getLocation(point, function(rs){
+               var addComp = rs.addressComponents; console.log(rs.address);//地址信息
+               alert(rs.address);//弹出所在地址
+ 
+            });
+        }else {
+            alert('failed'+this.getStatus());
+        }
+    },{enableHighAccuracy: true})
+    </script>
+ 
+ 
 </body>
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?1e529b916f2e43a567fc7d4b5c00fad6";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+ 
+ 
 </html>
